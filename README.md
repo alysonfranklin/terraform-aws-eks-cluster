@@ -212,7 +212,7 @@ Module usage with two worker groups:
   }
 
   module "eks_cluster" {
-    source = "cloudposse/eks-cluster/aws"
+    source = "git::https://github.com/alysonfranklin/terraform-aws-eks-cluster.git?ref=tags/0.43.2"
     # Recommends pinning every module to a specific version
     # version     = "x.x.x"
 

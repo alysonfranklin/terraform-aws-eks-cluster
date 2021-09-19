@@ -135,9 +135,8 @@ Other examples:
   }
 
   module "eks_cluster" {
-    source = "cloudposse/eks-cluster/aws"
+    source = "git::https://github.com/alysonfranklin/terraform-aws-eks-cluster.git?ref=tags/0.43.2"
     # Recommends pinning every module to a specific version
-    # version     = "x.x.x"
 
     vpc_id     = module.vpc.vpc_id
     subnet_ids = module.subnets.public_subnet_ids
@@ -162,9 +161,8 @@ Module usage with two worker groups:
   }
 
   module "eks_workers" {
-    source = "cloudposse/eks-workers/aws"
-    # Cloud Posse recommends pinning every module to a specific version
-    # version     = "x.x.x"
+    source = "git::https://github.com/alysonfranklin/terraform-aws-eks-node-group.git?ref=tags/0.26.0"
+    # Recommends pinning every module to a specific version
 
     attributes                         = ["small"]
     instance_type                      = "t3.small"
@@ -189,9 +187,7 @@ Module usage with two worker groups:
   }
 
   module "eks_workers_2" {
-    source = "cloudposse/eks-workers/aws"
-    # Cloud Posse recommends pinning every module to a specific version
-    # version     = "x.x.x"
+    source = "git::https://github.com/alysonfranklin/terraform-aws-eks-node-group.git?ref=tags/0.26.0"
 
     attributes                         = ["medium"]
     instance_type                      = "t3.medium"

@@ -134,56 +134,9 @@ Other examples:
     tags = { "kubernetes.io/cluster/${module.label.id}" = "shared" }
   }
 
-  module "vpc" {
-    source = "cloudposse/vpc/aws"
-    # Cloud Posse recommends pinning every module to a specific version
-    # version     = "x.x.x"
-    cidr_block = "172.16.0.0/16"
-
-    tags    = local.tags
-    context = module.label.context
-  }
-
-  module "subnets" {
-    source = "cloudposse/dynamic-subnets/aws"
-    # Cloud Posse recommends pinning every module to a specific version
-    # version     = "x.x.x"
-
-    availability_zones   = var.availability_zones
-    vpc_id               = module.vpc.vpc_id
-    igw_id               = module.vpc.igw_id
-    cidr_block           = module.vpc.vpc_cidr_block
-    nat_gateway_enabled  = true
-    nat_instance_enabled = false
-
-    tags    = local.tags
-    context = module.label.context
-  }
-
-  module "eks_node_group" {
-    source = "cloudposse/eks-node-group/aws"
-    # Cloud Posse recommends pinning every module to a specific version
-    # version     = "x.x.x"
-
-    instance_types                     = [var.instance_type]
-    subnet_ids                         = module.subnets.public_subnet_ids
-    health_check_type                  = var.health_check_type
-    min_size                           = var.min_size
-    max_size                           = var.max_size
-    cluster_name                       = module.eks_cluster.eks_cluster_id
-
-    # Enable the Kubernetes cluster auto-scaler to find the auto-scaling group
-    cluster_autoscaler_enabled = var.autoscaling_policies_enabled
-
-    context = module.label.context
-
-    # Ensure the cluster is fully created before trying to add the node group
-    module_depends_on = module.eks_cluster.kubernetes_config_map_id
-  }
-
   module "eks_cluster" {
     source = "cloudposse/eks-cluster/aws"
-    # Cloud Posse recommends pinning every module to a specific version
+    # Recommends pinning every module to a specific version
     # version     = "x.x.x"
 
     vpc_id     = module.vpc.vpc_id
@@ -264,7 +217,7 @@ Module usage with two worker groups:
 
   module "eks_cluster" {
     source = "cloudposse/eks-cluster/aws"
-    # Cloud Posse recommends pinning every module to a specific version
+    # Recommends pinning every module to a specific version
     # version     = "x.x.x"
 
     vpc_id     = module.vpc.vpc_id
@@ -286,16 +239,7 @@ Module usage with two worker groups:
 
 
 <!-- markdownlint-disable -->
-## Makefile Targets
-```text
-Available targets:
 
-  help                                Help screen
-  help/all                            Display help for all targets
-  help/short                          This help short screen
-  lint                                Lint terraform code
-
-```
 <!-- markdownlint-restore -->
 <!-- markdownlint-disable -->
 ## Requirements

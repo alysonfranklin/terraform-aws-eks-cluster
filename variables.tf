@@ -13,18 +13,6 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
-variable "allowed_security_groups" {
-  type        = list(string)
-  default     = []
-  description = "List of Security Group IDs to be allowed to connect to the EKS cluster"
-}
-
-variable "allowed_cidr_blocks" {
-  type        = list(string)
-  default     = []
-  description = "List of CIDR blocks to be allowed to connect to the EKS cluster"
-}
-
 variable "create_eks_service_role" {
   type        = bool
   default     = true
@@ -47,15 +35,9 @@ variable "workers_role_arns" {
   default     = []
 }
 
-variable "workers_security_group_ids" {
-  type        = list(string)
-  description = "Security Group IDs of the worker nodes"
-  default     = []
-}
-
 variable "kubernetes_version" {
   type        = string
-  default     = "1.15"
+  default     = "1.21"
   description = "Desired Kubernetes master version. If you do not specify a value, the latest available version is used"
 }
 
@@ -81,6 +63,15 @@ variable "public_access_cidrs" {
   type        = list(string)
   default     = ["0.0.0.0/0"]
   description = "Indicates which CIDR blocks can access the Amazon EKS public API server endpoint when enabled. EKS defaults this to a list with 0.0.0.0/0."
+}
+
+variable "service_ipv4_cidr" {
+  type        = string
+  default     = null
+  description = <<-EOT
+    The CIDR block to assign Kubernetes service IP addresses from.
+    You can only specify a custom CIDR block when you create a cluster, changing this value will force a new cluster to be created.
+    EOT
 }
 
 variable "enabled_cluster_log_types" {
@@ -215,6 +206,12 @@ variable "kubeconfig_path" {
   type        = string
   default     = ""
   description = "The Kubernetes provider `config_path` setting to use when `kubeconfig_path_enabled` is `true`"
+}
+
+variable "kubeconfig_context" {
+  type        = string
+  default     = ""
+  description = "Context to choose from the Kubernetes kube config file"
 }
 
 variable "kube_data_auth_enabled" {

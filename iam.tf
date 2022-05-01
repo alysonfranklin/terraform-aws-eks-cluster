@@ -49,7 +49,9 @@ data "aws_iam_policy_document" "cluster_elb_service_role" {
   count = local.create_eks_service_role ? 1 : 0
 
   statement {
+    sid    = "AllowElasticLoadBalancer"
     effect = "Allow"
+    #bridgecrew:skip=BC_AWS_IAM_57:There is no workable constraint to add to this policy
     actions = [
       "ec2:DescribeAccountAttributes",
       "ec2:DescribeAddresses",
@@ -59,12 +61,28 @@ data "aws_iam_policy_document" "cluster_elb_service_role" {
     ]
     resources = ["*"]
   }
+  # Adding a policy to cluster IAM role that deny permissions to logs:CreateLogGroup
+  # it is not needed since we create the log group elsewhere in this module, and it is causing trouble during "destroy"
+  statement {
+    sid    = "DenyCreateLogGroup"
+    effect = "Deny"
+    actions = [
+      "logs:CreateLogGroup"
+    ]
+    resources = ["*"]
+  }
 }
 
-resource "aws_iam_role_policy" "cluster_elb_service_role" {
+resource "aws_iam_policy" "cluster_elb_service_role" {
   count = local.create_eks_service_role ? 1 : 0
 
-  name   = module.label.id
-  role   = join("", aws_iam_role.default.*.name)
+  name   = "${module.label.id}-ServiceRole"
   policy = join("", data.aws_iam_policy_document.cluster_elb_service_role.*.json)
+}
+
+resource "aws_iam_role_policy_attachment" "cluster_elb_service_role" {
+  count = local.create_eks_service_role ? 1 : 0
+
+  policy_arn = aws_iam_policy.cluster_elb_service_role[0].arn
+  role       = join("", aws_iam_role.default.*.name)
 }

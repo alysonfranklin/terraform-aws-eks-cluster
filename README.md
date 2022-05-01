@@ -59,7 +59,7 @@ __NOTE:__ We give you the `kubernetes_config_map_ignore_role_changes` option and
 - We provision the EKS cluster
 - Then we wait for the cluster to become available (see `null_resource.wait_for_cluster` in [auth.tf](auth.tf)
 - Then we provision the Kubernetes Auth ConfigMap to map and add additional roles/users/accounts to Kubernetes groups
-- That is all we do in this module, but after that, we expect you to use [terraform-aws-eks-node-group](https://github.com/cloudposse/terraform-aws-eks-node-group)
+- That is all we do in this module, but after that, we expect you to use [terraform-aws-eks-node-group](https://github.com/alysonfranklin/terraform-aws-eks-node-group)
 to provision a managed Node Group
 - Then EKS updates the Auth ConfigMap and adds worker roles to it (for the worker nodes to join the cluster)
 - Since the ConfigMap is modified outside of Terraform state, Terraform wants to update it to to remove the worker roles EKS added
@@ -116,7 +116,7 @@ Other examples:
   }
 
   module "label" {
-    source = "cloudposse/label/null"
+    source = "alysonfranklin/label/null"
     # Cloud Posse recommends pinning every module to a specific version
     # version     = "x.x.x"
     namespace  = var.namespace
@@ -263,8 +263,8 @@ Module usage with two worker groups:
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_label"></a> [label](#module\_label) | cloudposse/label/null | 0.25.0 |
-| <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.25.0 |
+| <a name="module_label"></a> [label](#module\_label) | alysonfranklin/label/null | 0.25.0 |
+| <a name="module_this"></a> [this](#module\_this) | alysonfranklin/label/null | 0.25.0 |
 
 ## Resources
 
